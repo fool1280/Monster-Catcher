@@ -13,12 +13,13 @@ We also load all of our images.
 let canvas;
 let ctx;
 
-canvas = document.createElement("canvas");
+//canvas = document.createElement("canvas");
+canvas = document.getElementById("game");
 ctx = canvas.getContext("2d");
 canvas.width = 512;
 canvas.height = 480;
-canvas.style = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto; border:2px solid blue";
-document.body.appendChild(canvas);
+//canvas.style = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto; border:2px solid blue";
+//document.body.appendChild(canvas);
 
 let bgReady, heroReady, monsterReady;
 let bgImage, heroImage, monsterImage;
@@ -26,6 +27,9 @@ let bgImage, heroImage, monsterImage;
 let startTime = Date.now();
 const SECONDS_PER_ROUND = 15;
 let elapsedTime = 0;
+
+let w = window;
+requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
@@ -104,10 +108,9 @@ function setupKeyboardListeners() {
 let update = function () {
   // Update the time.
   elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-  console.log(`(${heroX},${heroY})`);
   //key code javascript, origin is top-left corner
   if (38 in keysDown) { // Player is holding up key
-    if (heroY - 5<0) { 
+    if (heroY - 5<-5) { 
       heroY = 450;
     } else {
       heroY -= 5;
@@ -121,7 +124,7 @@ let update = function () {
     }
   }
   if (37 in keysDown) { // Player is holding left key
-    if (heroX - 5<0) { 
+    if (heroX - 5<-5) { 
       heroX = 482;
     } else {
       heroX -= 5;
@@ -154,7 +157,7 @@ let update = function () {
 /**
  * This function, render, runs as often as possible.
  */
-var render = function () {
+let render = function () {
   if (bgReady) {
     ctx.drawImage(bgImage, 0, 0);
   }
@@ -173,7 +176,7 @@ var render = function () {
  * update (updates the state of the game, in this case our hero and monster)
  * render (based on the state of our game, draw the right things)
  */
-var main = function () {
+let main = function () {
   document.getElementById("score").innerHTML = `Score: ${score}`;
   update(); 
   render();
@@ -182,12 +185,11 @@ var main = function () {
   requestAnimationFrame(main);
 };
 
-// Cross-browser support for requestAnimationFrame.
-// Safely ignore this line. It's mostly here for people with old web browsers.
-var w = window;
-requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
-
-// Let's play this game!
 loadImages();
 setupKeyboardListeners();
 main();
+
+// Cross-browser support for requestAnimationFrame.
+// Safely ignore this line. It's mostly here for people with old web browsers.
+
+
