@@ -20,14 +20,20 @@
                 <li>Catch the monster. You might regret when you didn't.</li>
                 <li>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> and <a href="https://www.flaticon.com/authors/darius-dan" title="Darius Dan">Darius Dan</a> from <a href="https://www.flaticon.com/" title="Flaticon">Flaticon.</a></li>
               </ol>
-              <button type="button" id="start" onclick="startGame()">
+              <div>
+                <div class="input-group">
+                    <input type="text" id="user" placeholder="Your Pseudonymn" style="margin-right: 5px;"/>
+                    <button class="input-group-addon" onclick="registerUser()" type="button">Submit</button>
+                </div>
+              </div>
+              <button type="button" id="start" onclick="startGame()" style="margin-top: 5px;">
                 Start Game!
               </button>
               <button type="button" id="reset" onclick="startGame()" style="visibility: hidden;">
                 Reset Game!
               </button>
               <h1>History</h1>
-              <h4 id="round"></h4>
+              <h5 id="round"></h5>
               <h1>Best Score</h1>
               <h4 id="best-score"></h4>
               <h1>Score</h1>

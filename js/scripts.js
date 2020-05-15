@@ -8,11 +8,43 @@
 Here, we create and add our "canvas" to the page.
 We also load all of our images. 
 */
+
+let userHistory = {};
+let currentUser;
+
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
+
+function updateScore () {
+  let round = "";
+  if (userHistory !== null) {
+    for (let key in userHistory) {
+      round += `${key}: ${userHistory[key]}<br>`
+    }
+    document.getElementById("round").innerHTML = round;
+  }
+}
+
+function registerUser() {
+  let storeUser = localStorage.getItem("userHistory");
+  if (storeUser !== null) {
+    userHistory = JSON.parse(storeUser);
+  }
+  let userName = document.getElementById("user").value;
+  userName = userName.trim();
+  if (userName != null && userName != "") {
+    userHistory[userName] = 0;
+    currentUser = userName;
+    document.getElementById("user").value = null;
+  }
+  updateScore();
+}
+
+
 function startGame() {
+  updateScore();
   document.getElementById("start").style.visibility = 'hidden';
   let canvas = document.getElementById("game");
   let ctx = canvas.getContext("2d");
@@ -36,6 +68,7 @@ function startGame() {
   document.getElementById("reset").style.visibility = 'hidden';
   
   //.onload = function () : when the function callback return, it ensured the image had loaded.
+
   function loadImages() {
     bgImage = new Image();
     bgImage.onload = function () {
@@ -141,6 +174,8 @@ function startGame() {
       requestAnimationFrame(main);
     } else if (SECONDS_PER_ROUND-elapsedTime==0) {
       bestScore = Math.max(score, bestScore);
+      userHistory[currentUser] = bestScore;
+      updateScore();
       document.getElementById("best-score").innerHTML = `${bestScore}`;
       let status = "Game Over!";
       ctx.textBaseline = "middle"; 
@@ -149,6 +184,7 @@ function startGame() {
       ctx.textAlign = "center";
       ctx.fillText(status, 300, 300)
       document.getElementById("reset").style.visibility = 'visible';
+      localStorage.setItem("userHistory", JSON.stringify(userHistory));
     }
     // Request to do this again ASAP. This is a special method
     // for web browsers. 
