@@ -13,6 +13,7 @@ function getRandomInt(max) {
 }
 
 function startGame() {
+  document.getElementById("start").style.visibility = 'hidden';
   let canvas = document.getElementById("game");
   let ctx = canvas.getContext("2d");
   canvas.width = 600;
@@ -24,15 +25,17 @@ function startGame() {
   let monsterX = getRandomInt(canvas.width - heroWidth);
   let monsterY = getRandomInt(canvas.height - heroHeight); 
   let score = 0;
+  let bestScore = 0;
   let bgReady, heroReady, monsterReady;
   let bgImage, heroImage, monsterImage;
   let startTime = Date.now();
-  const SECONDS_PER_ROUND = 15;
+  const SECONDS_PER_ROUND = 5;
   let elapsedTime = 0;
   let w = window;
   requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
+  document.getElementById("reset").style.visibility = 'hidden';
+  
   //.onload = function () : when the function callback return, it ensured the image had loaded.
-
   function loadImages() {
     bgImage = new Image();
     bgImage.onload = function () {
@@ -128,22 +131,27 @@ function startGame() {
       ctx.fillStyle = "#00FF41";
       ctx.fillText(`Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`, 10, 20);
       document.getElementById("score").innerHTML = `${score}`
-    } else {
-      let status = "Game Over!";
-      ctx.textBaseline = "middle"; 
-      ctx.textAlign = "center";
-      ctx.font = "30px monospace";
-      ctx.fillStyle = "#00FF41";
-      ctx.fillText(status, 300, 300)
-    }
+    } 
   };
 
   let main = function () {
-    update(); 
-    render();
+    if (SECONDS_PER_ROUND-elapsedTime>0) {
+      update(); 
+      render();
+      requestAnimationFrame(main);
+    } else if (SECONDS_PER_ROUND-elapsedTime==0) {
+      bestScore = Math.max(score, bestScore);
+      document.getElementById("best-score").innerHTML = `${bestScore}`;
+      let status = "Game Over!";
+      ctx.textBaseline = "middle"; 
+      ctx.font = "30px monospace";
+      ctx.fillStyle = "#00FF41";
+      ctx.textAlign = "center";
+      ctx.fillText(status, 300, 300)
+      document.getElementById("reset").style.visibility = 'visible';
+    }
     // Request to do this again ASAP. This is a special method
     // for web browsers. 
-    requestAnimationFrame(main);
   };
 
   loadImages();
