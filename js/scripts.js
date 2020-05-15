@@ -35,7 +35,9 @@ function registerUser() {
   let userName = document.getElementById("user").value;
   userName = userName.trim();
   if (userName != null && userName != "") {
-    userHistory[userName] = 0;
+    if (userHistory[userName] === undefined) {
+      userHistory[userName] = 0;
+    }
     currentUser = userName;
     document.getElementById("user").value = null;
   }
