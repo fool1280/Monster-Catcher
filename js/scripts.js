@@ -72,31 +72,31 @@ function startGame() {
     elapsedTime = Math.floor((Date.now() - startTime) / 1000);
     //key code javascript, origin is top-left corner
     if (38 in keysDown) { // Player is holding up key
-      if (heroY - 5 < -5) { 
+      if (heroY - 10 < -10) { 
         heroY = canvas.height - heroHeight;
       } else {
-        heroY -= 5;
+        heroY -= 10;
       }
     }
     if (40 in keysDown) { // Player is holding down key
-      if (heroY + 5 > canvas.height - heroHeight) { 
+      if (heroY + 10 > canvas.height - heroHeight) { 
         heroY = 0;
       } else {
-        heroY += 5;
+        heroY += 10;
       }
     }
     if (37 in keysDown) { // Player is holding left key
-    if (heroX - 5 < -5) { 
+    if (heroX - 10 < -10) { 
         heroX = canvas.width - heroWidth;
       } else {
-        heroX -= 5;
+        heroX -= 10;
       }
     }
     if (39 in keysDown) { // Player is holding right key
-      if (heroX + 5 > canvas.width - heroWidth) { 
+      if (heroX + 10 > canvas.width - heroWidth) { 
         heroX = 0;
       } else {
-        heroX += 5;
+        heroX += 10;
       }
     }
     // Check if player and monster collided. Our images
