@@ -11,6 +11,7 @@ We also load all of our images.
 
 let userHistory = {};
 let currentUser;
+let bestScore;
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
@@ -19,11 +20,14 @@ function getRandomInt(max) {
 
 function updateScore () {
   let round = "";
+  bestScore = 0;
   if (userHistory !== null) {
     for (let key in userHistory) {
       round += `${key}: ${userHistory[key]}<br>`
+      bestScore = Math.max(userHistory[key], bestScore);
     }
     document.getElementById("round").innerHTML = round;
+    document.getElementById("best-score").innerHTML = `${bestScore}`;
   }
 }
 
@@ -59,7 +63,6 @@ function startGame() {
   let monsterX = getRandomInt(canvas.width - heroWidth);
   let monsterY = getRandomInt(canvas.height - heroHeight); 
   let score = 0;
-  let bestScore = 0;
   let bgReady, heroReady, monsterReady;
   let bgImage, heroImage, monsterImage;
   let startTime = Date.now();
@@ -175,8 +178,7 @@ function startGame() {
       render();
       requestAnimationFrame(main);
     } else if (SECONDS_PER_ROUND-elapsedTime==0) {
-      bestScore = Math.max(score, bestScore);
-      userHistory[currentUser] = bestScore;
+      userHistory[currentUser] = Math.max(score, userHistory[currentUser]);
       updateScore();
       document.getElementById("best-score").innerHTML = `${bestScore}`;
       let status = "Game Over!";
