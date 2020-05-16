@@ -10,7 +10,7 @@ We also load all of our images.
 */
 
 let userHistory = {};
-let currentUser;
+let currentUser = "Anonymous";
 let bestScore;
 
 function getRandomInt(max) {
@@ -58,15 +58,15 @@ function startGame() {
   canvas.height = 600;
   let heroWidth = 40;
   let heroHeight = 40;
-  let heroX = 280;
-  let heroY = 280;
+  let heroX = getRandomInt(canvas.width - heroWidth);
+  let heroY = getRandomInt(canvas.height - heroHeight);
   let monsterX = getRandomInt(canvas.width - heroWidth);
   let monsterY = getRandomInt(canvas.height - heroHeight); 
   let score = 0;
   let bgReady, heroReady, monsterReady;
   let bgImage, heroImage, monsterImage;
   let startTime = Date.now();
-  const SECONDS_PER_ROUND = 5;
+  const SECONDS_PER_ROUND = 10;
   let elapsedTime = 0;
   let w = window;
   requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
@@ -110,10 +110,15 @@ function startGame() {
     elapsedTime = Math.floor((Date.now() - startTime) / 1000);
     //key code javascript, origin is top-left corner
     if (38 in keysDown) { // Player is holding up key
-      if (heroY - 10 < -10) { 
+      if (heroY < 0) { 
         heroY = canvas.height - heroHeight;
       } else {
         heroY -= 10;
+      }
+      if (monsterX < 0) { //monster go left
+        monsterX = canvas.width - heroWidth;
+      } else {
+        monsterX -= 2;
       }
     }
     if (40 in keysDown) { // Player is holding down key
@@ -122,12 +127,22 @@ function startGame() {
       } else {
         heroY += 10;
       }
+      if (monsterX + 2 > canvas.width - heroWidth) { //monster go right
+        monsterX = 0;
+      } else {
+        monsterX += 2;
+      }
     }
     if (37 in keysDown) { // Player is holding left key
-    if (heroX - 10 < -10) { 
+      if (heroX < 0) { 
         heroX = canvas.width - heroWidth;
       } else {
         heroX -= 10;
+      }
+      if (monsterY < 0) {  //monster go up
+        monsterY = canvas.height - heroHeight;
+      } else {
+        monsterY -= 2;
       }
     }
     if (39 in keysDown) { // Player is holding right key
@@ -135,6 +150,11 @@ function startGame() {
         heroX = 0;
       } else {
         heroX += 10;
+      }
+      if (monsterY + 2 > canvas.height - heroHeight) { //monster go down
+        monsterY = 0;
+      } else {
+        monsterY += 2;
       }
     }
     // Check if player and monster collided. Our images
@@ -178,7 +198,11 @@ function startGame() {
       render();
       requestAnimationFrame(main);
     } else if (SECONDS_PER_ROUND-elapsedTime==0) {
-      userHistory[currentUser] = Math.max(score, userHistory[currentUser]);
+      if (!(currentUser in userHistory)) {
+        userHistory[currentUser] = score;    
+      } else {
+        userHistory[currentUser] = Math.max(score, userHistory[currentUser]);
+      }
       updateScore();
       document.getElementById("best-score").innerHTML = `${bestScore}`;
       let status = "Game Over!";
